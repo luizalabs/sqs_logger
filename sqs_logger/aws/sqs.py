@@ -1,4 +1,5 @@
 import logging
+import sys
 
 from boto import sqs
 from boto.sqs.message import RawMessage as SQSMessage
@@ -40,6 +41,9 @@ class SQSManager:
     def put(self, message):
         if not message:
             raise QueueError('Message cannot be empty')
+
+        if sys.getsizeof(message) > 256000:
+            raise QueueError('Message size not allowed')
 
         logger.debug('Sending message {} to queue:{}'.format(
             message,

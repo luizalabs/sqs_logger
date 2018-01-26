@@ -39,3 +39,16 @@ class TestSQSManager:
             sqs_manager.put('Test')
 
         assert e.value.message == 'Queue name cannot be empty'
+
+    def test_send_message_with_big_payload_returns_queue_error(
+        self,
+        sqs_manager
+    ):
+        payload = ''
+        for i in range(27000):
+            payload += 'ABCABCABC1'
+
+        with pytest.raises(QueueError) as e:
+            sqs_manager.put(payload)
+
+        assert e.value.message == 'Message size not allowed'

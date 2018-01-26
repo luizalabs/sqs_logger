@@ -13,7 +13,8 @@ class SQSLoggerHandler(logging.Handler):
     def __init__(
         self,
         queue_name,
-        region_name
+        region_name,
+        queue_size=10
     ):
         logging.Handler.__init__(self)
 
@@ -22,7 +23,7 @@ class SQSLoggerHandler(logging.Handler):
             region_name=region_name
         )
 
-        self.queue = multiprocessing.Queue(-1)
+        self.queue = multiprocessing.Queue(queue_size)
 
         t = threading.Thread(target=self.receive)
         t.daemon = True
