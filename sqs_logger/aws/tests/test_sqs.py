@@ -4,7 +4,6 @@ from sqs_logger.aws.exceptions import QueueError
 from sqs_logger.aws.sqs import SQSManager
 
 
-@pytest.mark.integration
 class TestSQSManager:
 
     @pytest.fixture

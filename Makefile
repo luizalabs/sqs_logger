@@ -4,8 +4,8 @@ export PYTHONPATH=$PYTHONPATH:$(pwd)
 export QUEUE_NAME=sqs-logger
 export REGION_NAME=us-east-1
 
-test-integration:
-	@py.test -rxs --pdb -k$(Q) sqs_logger -m 'integration'
+test:
+	@py.test -rxs --pdb -k$(Q) sqs_logger
 
 requirements:
 	@pip install -r requirements/base.txt --upgrade
