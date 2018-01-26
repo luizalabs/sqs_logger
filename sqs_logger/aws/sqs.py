@@ -30,7 +30,7 @@ class SQSManager:
     def queue(self):
         if not self._queue:
             try:
-                self._queue = self.client.get_queue(self.queue_name)
+                self._queue = self.client.create_queue(self.queue_name)
             except Exception as e:
                 logger.error(
                     'Fail to get SQS queue:{}'.format(self.queue_name)

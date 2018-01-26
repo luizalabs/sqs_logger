@@ -1,24 +1,72 @@
+restore_cache: &restore_cache
+  keys:
+    - cache-{{ .Branch }}
+    - cache-master
+
+install_dependencies: &install_dependencies
+  name: Install Dependencies
+  command: |
+    pip install -r requirements/base.txt
+    pip install tox
+
+save_cache: &save_cache
+  key: cache-{{ .Branch }}
+  paths:
+    - "~/.cache/pip"
+    - "~/.apt-cache"
+
+python3_steps: &python3_steps
+  steps:
+    - checkout
+    - restore_cache:
+        <<: *restore_cache
+    - run:
+        <<: *install_dependencies
+    - save_cache:
+        <<: *save_cache
+    - run:
+        name: Run test
+        command: make test
+
 version: 2
 jobs:
-  build:
+  python27:
     docker:
-      - image: python:2.7
-    working_directory: "~/sqs_logger/"
+      - image: python:2.7.13
+    working_directory: "~/sqs_logger-py27/"
     steps:
       - checkout
       - restore_cache:
-          keys:
-            - cache-{{ .Branch }}
-            - cache-master
+          <<: *restore_cache
       - run:
-          name: Install Dependencies
-          command: |
-            pip install -U -r requirements/base.txt --upgrade
+          <<: *install_dependencies
       - save_cache:
-          key: cache-{{ .Branch }}
-          paths:
-            - "~/.cache/pip"
-            - "~/.apt-cache"
+          <<: *save_cache
       - run:
-          name: Run tests
-          command: make test
+          name: Run Tox
+          command: tox -e py27
+  python34:
+    docker:
+      - image: python:3.4
+    working_directory: "~/sqs_logger/"
+    <<: *python3_steps
+  python35:
+    docker:
+      - image: python:3.5
+    working_directory: "~/sqs_logger/"
+    <<: *python3_steps
+  python36:
+    docker:
+      - image: python:3.6
+    working_directory: "~/sqs_logger/"
+    <<: *python3_steps
+
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - python27
+      - python34
+      - python35
+      - python36
