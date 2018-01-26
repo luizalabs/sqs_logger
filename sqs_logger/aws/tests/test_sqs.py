@@ -1,4 +1,5 @@
 import pytest
+from simple_settings.utils import settings_stub
 
 from sqs_logger.aws.exceptions import QueueError
 from sqs_logger.aws.sqs import SQSManager
@@ -18,3 +19,23 @@ class TestSQSManager:
 
     def test_send_message_returns_success(self, sqs_manager):
         assert sqs_manager.put('Test')
+
+    @settings_stub(
+        AWS_ACCESS_KEY_ID='',
+        AWS_SECRET_ACCESS_KEY=''
+    )
+    def test_send_message_missing_credentials_returns_queue_error(self):
+        with pytest.raises(QueueError) as e:
+            sqs_manager = SQSManager()
+            sqs_manager.put('Test')
+
+        assert e.value.message == (
+            'The security token included in the request is invalid.'
+        )
+
+    def test_send_message_missing_queue_name_returns_queue_error(self):
+        with pytest.raises(QueueError) as e:
+            sqs_manager = SQSManager(queue_name='')
+            sqs_manager.put('Test')
+
+        assert e.value.message == 'Queue name cannot be empty'

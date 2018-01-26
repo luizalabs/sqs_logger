@@ -1,8 +1,8 @@
 import logging
-import os
 
 from boto import sqs
 from boto.sqs.message import RawMessage as SQSMessage
+from simple_settings import settings
 
 from .exceptions import QueueError
 
@@ -13,17 +13,15 @@ class SQSManager:
 
     def __init__(
         self,
-        queue_name=os.getenv('QUEUE_NAME'),
-        region_name=os.getenv('REGION_NAME'),
-        aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
-        aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY')
+        queue_name=settings.QUEUE_NAME,
+        region_name=settings.REGION_NAME
     ):
         self._queue = None
         self.queue_name = queue_name
         self.client = sqs.connect_to_region(
             region_name=region_name,
-            aws_access_key_id=aws_access_key_id,
-            aws_secret_access_key=aws_secret_access_key
+            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
         )
 
     @property
@@ -51,4 +49,8 @@ class SQSManager:
         sqs_message = SQSMessage()
         sqs_message.set_body(message)
 
-        return self.queue.write(sqs_message)
+        try:
+            return self.queue.write(sqs_message)
+        except Exception as e:
+            logger.error('Could not send message error:{}'.format(e.message))
+            raise QueueError(e.message)

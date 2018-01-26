@@ -13,17 +13,13 @@ class SQSLoggerHandler(logging.Handler):
     def __init__(
         self,
         queue_name,
-        region_name,
-        access_key_id,
-        secret_access_key,
+        region_name
     ):
         logging.Handler.__init__(self)
 
         self.sqs_manager = SQSManager(
             queue_name=queue_name,
-            region_name=region_name,
-            aws_access_key_id=access_key_id,
-            aws_secret_access_key=secret_access_key
+            region_name=region_name
         )
 
         self.queue = multiprocessing.Queue(-1)
@@ -38,7 +34,7 @@ class SQSLoggerHandler(logging.Handler):
                 record = self.queue.get()
 
                 logger.debug('Message sent {} to the queue'.format(record))
-                self.sqs_manager.put(record.message)
+                self.sqs_manager.put(record)
             except (KeyboardInterrupt, SystemExit):
                 raise
             except EOFError:
@@ -52,7 +48,7 @@ class SQSLoggerHandler(logging.Handler):
     def emit(self, record):
         try:
             s = self._format_record(record)
-            self.send(s)
+            self.send(s.msg)
         except (KeyboardInterrupt, SystemExit):
             raise
         except Exception:

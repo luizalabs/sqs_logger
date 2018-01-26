@@ -1,11 +1,5 @@
 export PYTHONPATH=$PYTHONPATH:$(pwd)
-
-#SQS
-export QUEUE_NAME=sqs-logger
-export REGION_NAME=us-east-1
-
-export AWS_ACCESS_KEY_ID=AKIAJI5SNLMVL5DFW6KA
-export AWS_SECRET_ACCESS_KEY=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
+export SIMPLE_SETTINGS=sqs_logger.settings.base
 
 test:
 	@py.test -vv -xs sqs_logger
