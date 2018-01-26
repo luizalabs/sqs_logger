@@ -8,6 +8,8 @@ This log handler pushes log messages to queue.
 
 ## Tests
 
+It is necessary to have the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` keys as environment variables.
+
 `make test`
 
 Depends on:

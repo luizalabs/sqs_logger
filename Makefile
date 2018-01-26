@@ -4,10 +4,6 @@ export PYTHONPATH=$PYTHONPATH:$(pwd)
 export QUEUE_NAME=sqs-logger
 export REGION_NAME=us-east-1
 
-#Credentials
-export AWS_ACCESS_KEY_ID=AKIAJI5SNLMVL5DFW6KA
-export AWS_SECRET_ACCESS_KEY=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
-
 test-integration:
 	@py.test -rxs --pdb -k$(Q) sqs_logger -m 'integration'
 
