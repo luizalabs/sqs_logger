@@ -44,4 +44,3 @@ Upload to PyPI
 Update `master` and push new tag release
 
     git push && git push --tags
->>>>>>> sqs logger handler implementation
