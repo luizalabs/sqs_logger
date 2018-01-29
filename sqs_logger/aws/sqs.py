@@ -17,13 +17,18 @@ class SQSManager:
         queue_name=os.getenv('QUEUE_NAME', 'sqs-logger'),
         region_name=os.getenv('REGION_NAME', 'us-east-1')
     ):
+        self.client = None
         self._queue = None
         self.queue_name = queue_name
-        self.client = sqs.connect_to_region(
-            region_name=region_name,
-            aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
-            aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY')
-        )
+
+        try:
+            self.client = sqs.connect_to_region(
+                region_name=region_name,
+                aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
+                aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY')
+            )
+        except Exception as e:
+            logger.error('Error in SQS, error:{}'.format(e))
 
     @property
     def queue(self):

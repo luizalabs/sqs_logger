@@ -1,3 +1,5 @@
+import os
+
 import pytest
 
 from sqs_logger.aws.exceptions import QueueError
@@ -25,6 +27,18 @@ class TestSQSManager:
             sqs_manager.put('Test')
 
         assert e.value.message == 'Queue name cannot be empty'
+
+    def test_send_message_missing_credentials_returns_queue_error(self):
+        os.environ['AWS_ACCESS_KEY_ID'] = ''
+        os.environ['AWS_SECRET_ACCESS_KEY'] = ''
+
+        with pytest.raises(QueueError) as e:
+            sqs_manager = SQSManager()
+            sqs_manager.put('Test')
+
+        assert e.value.message == (
+            'The security token included in the request is invalid.'
+        )
 
     def test_send_message_with_big_payload_returns_queue_error(
         self,
