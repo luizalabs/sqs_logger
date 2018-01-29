@@ -1,5 +1,4 @@
 export PYTHONPATH=$PYTHONPATH:$(pwd)
-export SIMPLE_SETTINGS=sqs_logger.settings.base
 
 test:
 	@py.test -vv -xs sqs_logger
