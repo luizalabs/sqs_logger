@@ -1,0 +1,2 @@
+boto==2.48.0
+simple-settings==0.12.1
