@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup_options = dict(
     name='sqs_logger',
-    version='0.0.1',
+    version='1.0.0',
     description='',
     author='Luiz Gois',
     author_email='luiz.gois@luizalabs.com',
