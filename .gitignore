@@ -69,3 +69,4 @@ target/
 *.pyo
 *.swp
 *.sw*
+.pytest_cache
