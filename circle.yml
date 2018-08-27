@@ -60,7 +60,11 @@ jobs:
       - image: python:3.6
     working_directory: "~/sqs_logger/"
     <<: *python3_steps
-
+  python37:
+    docker:
+      - image: python:3.7
+    working_directory: "~/sqs_logger/"
+    <<: *python3_steps
 
 workflows:
   version: 2
@@ -70,3 +74,4 @@ workflows:
       - python34
       - python35
       - python36
+      - python37
